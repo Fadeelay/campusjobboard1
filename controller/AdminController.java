@@ -1,10 +1,6 @@
 package com.example.campusjobboard.controller;
 
-/**
- * Provides admin-only management pages.
- * Enables administrators to approve or reject job postings and to activate
- * or deactivate non-admin user accounts in the system.
- */
+
 
 
 import com.example.campusjobboard.model.*;
@@ -75,3 +71,4 @@ public class AdminController {
         return "redirect:/admin/users";
     }
 }
+
