@@ -1,8 +1,5 @@
 package com.example.campusjobboard.controller;
 
-
-
-
 import com.example.campusjobboard.model.*;
 import com.example.campusjobboard.enums.*;
 import com.example.campusjobboard.service.*;
@@ -12,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 
 @Controller
 @RequestMapping("/admin")
@@ -58,7 +54,6 @@ public class AdminController {
         return "admin/users";
     }
 
-
     @PostMapping("/users/{id}/activate")
     public String activateUser(@PathVariable Long id) {
         adminService.activateUser(id);
@@ -71,4 +66,5 @@ public class AdminController {
         return "redirect:/admin/users";
     }
 }
+
 
