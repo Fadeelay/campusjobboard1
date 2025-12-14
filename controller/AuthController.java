@@ -1,9 +1,5 @@
 package com.example.campusjobboard.controller;
-/**
- * Handles public authentication pages for the Campus Job Board system.
- * Provides mappings for home, login, and user registration, and delegates
- * registration logic to UserService while displaying validation errors.
- */
+
 
 
 import com.example.campusjobboard.model.User;
@@ -56,3 +52,4 @@ public class AuthController {
         }
     }
 }
+
