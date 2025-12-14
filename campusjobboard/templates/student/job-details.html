@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head}"></head>
+<body>
+<div th:replace="~{fragments/header :: navigation}"></div>
+
+<div class="container">
+    <div class="card">
+        <h1 th:text="${job.title}">Job Title</h1>
+
+        <p class="job-meta">
+            <span>💼 <span th:text="${job.category}">Category</span></span>
+            <span>📍 <span th:text="${job.location}">Location</span></span>
+            <span>📅 Deadline:
+                <span th:text="${#temporals.format(job.deadline, 'yyyy-MM-dd')}">Date</span>
+            </span>
+        </p>
+
+        <p style="margin-bottom: 1rem;">
+            <strong>Employer:</strong>
+            <span th:text="${job.employer.fullName}">Employer Name</span>
+        </p>
+
+        <h3 style="margin-top: 1.5rem;">Job Description</h3>
+        <p th:text="${job.description}" style="margin-top: 0.5rem;"></p>
+
+        <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+            <form th:action="@{/student/jobs/{id}/apply(id=${job.jobId})}" method="post">
+                <button type="submit" class="btn btn-success">Apply Now</button>
+            </form>
+            <a th:href="@{/student/jobs}" class="btn btn-secondary">Back to Jobs</a>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

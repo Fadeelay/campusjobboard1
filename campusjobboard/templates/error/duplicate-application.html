@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head  th:replace="~{fragments/header :: head}"></head>
+<body>
+<div th:replace="~{fragments/header :: navigation}"></div>
+
+<div class="container">
+    <h1>Duplicate Application</h1>
+    <p th:text="${errorMessage}">You have already applied to this job.</p>
+    <a th:href="@{/student/jobs}" class="btn">Back to Jobs</a>
+    <a th:href="@{/student/my-applications}" class="btn">View My Applications</a>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

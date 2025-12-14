@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head  th:replace="~{fragments/header :: head}"></head>
+<body>
+<div th:replace="~{fragments/header :: navigation}"></div>
+
+<div class="container">
+    <h1>Manage Job Postings</h1>
+
+    <table th:if="${jobs != null and !jobs.isEmpty()}">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Employer</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="job : ${jobs}">
+            <td th:text="${job.title}">Job Title</td>
+            <td th:text="${job.employer.fullName}">Employer</td>
+            <td th:text="${job.category}">Category</td>
+            <td th:text="${job.status}">Status</td>
+            <td>
+                <form th:if="${job.status.name() == 'PENDING'}"
+                      th:action="@{/admin/jobs/{id}/approve(id=${job.jobId})}"
+                      method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-success">Approve</button>
+                </form>
+                <form th:if="${job.status.name() == 'PENDING'}"
+                      th:action="@{/admin/jobs/{id}/reject(id=${job.jobId})}"
+                      method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-danger">Reject</button>
+                </form>
+                <span th:if="${job.status.name() != 'PENDING'}" th:text="${job.status}"></span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p th:if="${jobs == null or jobs.isEmpty()}">No job postings to review.</p>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

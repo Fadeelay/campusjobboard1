@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head}"></head>
+<body>
+<div th:replace="~{fragments/header :: navigation}"></div>
+
+<div class="container">
+    <h1>My Job Postings</h1>
+
+    <a th:href="@{/employer/jobs/new}" class="btn btn-success">Post New Job</a>
+
+    <table th:if="${jobs != null and !jobs.isEmpty()}">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Deadline</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="job : ${jobs}">
+            <td th:text="${job.title}">Job Title</td>
+            <td th:text="${job.category}">Category</td>
+            <td th:text="${job.status}">Status</td>
+            <td th:text="${#temporals.format(job.deadline, 'yyyy-MM-dd')}">Deadline</td>
+            <td>
+                <a th:href="@{/employer/jobs/{id}/edit(id=${job.jobId})}" class="btn">Edit</a>
+                <a th:href="@{/employer/jobs/{id}/applicants(id=${job.jobId})}" class="btn">View Applicants</a>
+                <form th:action="@{/employer/jobs/{id}/delete(id=${job.jobId})}"
+                      method="post"
+                      style="display:inline;"
+                      onsubmit="return confirm('Are you sure you want to delete this job?');">
+                    <button type="submit" class="btn btn-danger">
+                        Delete
+                    </button>
+                </form>
+
+
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p th:if="${jobs == null or jobs.isEmpty()}">You have not posted any jobs yet.</p>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

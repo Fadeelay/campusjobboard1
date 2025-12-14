@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head  th:replace="~{fragments/header :: head}"></head>
+<body>
+<div th:replace="~{fragments/header :: navigation}"></div>
+
+<section class="hero">
+    <h1>Aim Higher. Reach Farther. Dream Bigger.</h1>
+    <p class="hero-subtitle">Connect with campus opportunities. Find your perfect job today.</p>
+
+    <div class="search-box" sec:authorize="hasRole('STUDENT')">
+        <input type="text" placeholder="Job Title, Keywords, or Company">
+        <input type="text" placeholder="City, State or ZIP">
+        <select>
+            <option value="">All Categories</option>
+            <option value="IT">IT</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Design">Design</option>
+            <option value="Finance">Finance</option>
+        </select>
+        <button>Search Jobs</button>
+    </div>
+
+    <div sec:authorize="isAnonymous()" style="margin-top: 2rem;">
+        <a th:href="@{/register}" class="btn" style="margin-right: 1rem;">Get Started</a>
+        <a th:href="@{/login}" class="btn btn-secondary">Sign In</a>
+    </div>
+</section>
+
+<div class="container">
+    <div sec:authorize="hasRole('STUDENT')" style="text-align: center; padding: 3rem 0;">
+        <h2>Welcome, Student!</h2>
+        <p style="font-size: 1.1rem; color: #777; margin-bottom: 2rem;">Browse available jobs and apply to opportunities that match your skills.</p>
+        <a th:href="@{/student/jobs}" class="btn">Browse Jobs</a>
+    </div>
+
+    <div sec:authorize="hasRole('EMPLOYER')" style="text-align: center; padding: 3rem 0;">
+        <h2>Welcome, Employer!</h2>
+        <p style="font-size: 1.1rem; color: #777; margin-bottom: 2rem;">Post jobs and review applications from talented students.</p>
+        <a th:href="@{/employer/jobs/new}" class="btn">Post a Job</a>
+        <a th:href="@{/employer/my-jobs}" class="btn btn-secondary" style="margin-left: 1rem;">My Jobs</a>
+    </div>
+
+    <div sec:authorize="hasRole('ADMIN')" style="text-align: center; padding: 3rem 0;">
+        <h2>Admin Dashboard</h2>
+        <p style="font-size: 1.1rem; color: #777; margin-bottom: 2rem;">Manage jobs and users across the platform.</p>
+        <a th:href="@{/admin/jobs}" class="btn">Manage Jobs</a>
+        <a th:href="@{/admin/users}" class="btn btn-secondary" style="margin-left: 1rem;">Manage Users</a>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

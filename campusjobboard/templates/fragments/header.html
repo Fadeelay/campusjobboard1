@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle} ?: 'Campus Job Board'">Campus Job Board</title>
+
+    <!-- Google Fonts (like Careerfy template) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+<nav th:fragment="navigation">
+    <div class="nav-container">
+        <a href="/" class="logo">Campus Job Board</a>
+
+        <ul class="nav-links">
+            <li sec:authorize="isAnonymous()">
+                <a th:href="@{/}">Home</a>
+            </li>
+
+            <li sec:authorize="hasRole('STUDENT')">
+                <a th:href="@{/student/jobs}">Browse Jobs</a>
+            </li>
+
+            <li sec:authorize="hasRole('STUDENT')">
+                <a th:href="@{/student/my-applications}">My Applications</a>
+            </li>
+
+            <li sec:authorize="hasRole('EMPLOYER')">
+                <a th:href="@{/employer/my-jobs}">My Jobs</a>
+            </li>
+
+            <li sec:authorize="hasRole('EMPLOYER')">
+                <a th:href="@{/employer/jobs/new}" class="btn-nav">Post Job</a>
+            </li>
+
+            <li sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{/admin/jobs}">Manage Jobs</a>
+            </li>
+
+            <li sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{/admin/users}">Manage Users</a>
+            </li>
+
+            <li sec:authorize="isAnonymous()">
+                <a th:href="@{/login}">Sign In</a>
+            </li>
+
+            <li sec:authorize="isAnonymous()">
+                <a th:href="@{/register}" class="btn-nav">Register</a>
+            </li>
+
+            <li sec:authorize="isAuthenticated()">
+                <span style="color: #777; margin-right: 1rem;" sec:authentication="name"></span>
+            </li>
+
+            <li sec:authorize="isAuthenticated()">
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit" class="btn-nav" style="border: none; cursor: pointer;">Logout</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</nav>
+</body>
+</html>

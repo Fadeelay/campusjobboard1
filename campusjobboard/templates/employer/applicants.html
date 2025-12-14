@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head}"></head>
+<body>
+<div th:replace="~{fragments/header :: navigation}"></div>
+
+<div class="container">
+    <div class="card">
+        <h1>Applicants for <span th:text="${job.title}">Job Title</span></h1>
+        <p class="job-meta">
+            <span>📍 <span th:text="${job.location}">Location</span></span>
+            <span>💼 <span th:text="${job.category}">Category</span></span>
+        </p>
+
+        <table th:if="${applicants != null && !applicants.isEmpty()}">
+            <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Email</th>
+                <th>Applied On</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="app : ${applicants}">
+                <td th:text="${app.student.fullName}">Name</td>
+                <td th:text="${app.student.email}">Email</td>
+                <td th:text="${#temporals.format(app.appliedAt, 'yyyy-MM-dd HH:mm')}">Date</td>
+                <td>
+                        <span th:text="${app.status}"
+                              th:classappend="${app.status.name() == 'SUBMITTED'} ? 'badge badge-info' :
+                                              (${app.status.name() == 'ACCEPTED'} ? 'badge badge-success' :
+                                                                                    'badge badge-danger')">
+                        </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <p th:if="${applicants == null || applicants.isEmpty()}"
+           style="text-align: center; padding: 2rem; color: #777;">
+            No applications have been submitted for this job yet.
+        </p>
+
+        <a th:href="@{/employer/my-jobs}" class="btn btn-secondary" style="margin-top: 1rem;">Back to My Jobs</a>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
