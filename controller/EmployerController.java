@@ -1,10 +1,5 @@
 package com.example.campusjobboard.controller;
 
-/**
- * Exposes employer-facing pages and actions.
- * Allows employers to manage their job postings (list, create, edit, delete)
- * and view applications submitted by students for each job.
- */
 
 
 import com.example.campusjobboard.model.Job;
@@ -103,3 +98,4 @@ public class EmployerController {
         return "employer/applicants";
     }
 }
+
