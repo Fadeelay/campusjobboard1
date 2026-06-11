@@ -13,19 +13,12 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>campusjobboard</name>
 	<description>Campus Job Board</description>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
 	<developers>
-		<developer/>
+		<developer>
+			<name>Fadeelay</name>
+			<email>fadlullahlawal2@gmail.com</email>
+		</developer>
 	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
 	<properties>
 		<java.version>21</java.version>
 	</properties>

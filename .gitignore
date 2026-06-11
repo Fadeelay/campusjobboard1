@@ -1,0 +1,17 @@
+### IntelliJ IDEA ###
+.idea/
+*.iml
+*.iws
+*.ipr
+
+### Visual Studio ###
+.vs/
+
+### Claude Code (local only) ###
+.claude/
+
+### OS ###
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
