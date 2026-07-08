@@ -1,0 +1,38 @@
+databases:
+  - name: campusjobboard-db
+    plan: free
+    databaseName: campusjobboard_db
+    user: campususer
+
+services:
+  - type: web
+    name: campusjobboard
+    runtime: docker
+    plan: free
+    rootDir: campusjobboard
+    dockerfilePath: Dockerfile
+    dockerContext: .
+    healthCheckPath: /
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: render
+      - key: DB_HOST
+        fromDatabase:
+          name: campusjobboard-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: campusjobboard-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: campusjobboard-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: campusjobboard-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: campusjobboard-db
+          property: password

@@ -1,9 +1,3 @@
-/**
- * Service interface for job-related business logic.
- * Defines operations for creating, updating, deleting, and retrieving jobs,
- * including listing approved jobs for students.
- */
-
 package com.example.campusjobboard.service;
 
 import com.example.campusjobboard.model.Job;
@@ -23,6 +17,8 @@ public interface JobService {
     Job findById(Long jobId);
 
     List<Job> findApprovedJobs();
+
+    List<Job> findApprovedJobsFiltered(String location, String category, Double minSalary, Double maxSalary);
 
     List<Job> findAll();
 

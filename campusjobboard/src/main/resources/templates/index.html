@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/head :: head('Find Your Perfect Job')}"></head>
+<body>
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<!-- ── Hero ──────────────────────────────────────────────────────────────── -->
+<section class="hero">
+    <div class="container">
+        <div class="row align-items-center gy-4">
+            <!-- Text column -->
+            <div class="col-lg-6 text-center text-lg-start">
+                <h1 class="mb-3 hanim-1">Let's Help You Find Your <span style="color:#60A5FA">Perfect</span> Hustle</h1>
+                <p class="mb-4 hanim-2">Internships, part-time roles, and career opportunities designed for university students.</p>
+
+                <!-- Quick search -->
+                <div class="hero-search hanim-3" style="cursor:default">
+                    <i class="bi bi-search text-muted ms-2" style="font-size:1.1rem"></i>
+                    <input type="text" id="heroSearch" placeholder="Search by job title or keyword…"
+                           oninput="applyFilters()">
+                    <button class="btn-search" onclick="scrollToJobs()">
+                        <i class="bi bi-search me-1"></i>Search
+                    </button>
+                </div>
+
+                <!-- Popular tags -->
+                <div class="popular-tags mt-3 hanim-4">
+                    <span>Popular:</span>
+                    <a href="#jobs" onclick="setCategory('Engineering')" class="tag-pill">Engineering</a>
+                    <a href="#jobs" onclick="setCategory('Marketing')"   class="tag-pill">Marketing</a>
+                    <a href="#jobs" onclick="setCategory('Design')"      class="tag-pill">Design</a>
+                    <a href="#jobs" onclick="setCategory('Finance')"     class="tag-pill">Finance</a>
+                    <a href="#jobs" onclick="setCategory('')"            class="tag-pill">All Jobs</a>
+                </div>
+
+                <!-- Guest CTAs -->
+                <div sec:authorize="isAnonymous()" class="d-flex gap-3 justify-content-center justify-content-lg-start flex-wrap mt-4 hanim-5">
+                    <a th:href="@{/register}" class="btn btn-primary btn-lg px-4 rounded-12 fw-600">
+                        Get Started — It's Free
+                    </a>
+                    <a th:href="@{/login}" class="btn btn-outline-light btn-lg px-4 rounded-12">
+                        Sign In
+                    </a>
+                </div>
+            </div>
+
+            <!-- Hero illustration: Product Promotion -->
+            <div class="col-lg-6 d-none d-lg-flex justify-content-end align-items-center hanim-1">
+              <lottie-player src="/Product%20Promotion.json" background="transparent" speed="1"
+                             loop autoplay style="width:420px;height:380px;max-width:100%">
+              </lottie-player>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── Stats ──────────────────────────────────────────────────────────────── -->
+<section class="stats-section">
+    <div class="container">
+        <div class="row g-0 text-center divide-x">
+            <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="0">
+                <div class="stat-item border-end border-light">
+                    <span class="number" id="totalCount" th:text="${#lists.size(recentJobs)}">0</span>
+                    <span class="label">Live Job Openings</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="100">
+                <div class="stat-item border-end border-light">
+                    <span class="number" data-count="500">500+</span>
+                    <span class="label">Students Hired</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="200">
+                <div class="stat-item border-end border-light">
+                    <span class="number" data-count="120">120+</span>
+                    <span class="label">Partner Companies</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="300">
+                <div class="stat-item">
+                    <span class="number" data-count="98">98%</span>
+                    <span class="label">Satisfaction Rate</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── Categories ─────────────────────────────────────────────────────────── -->
+<section class="section-pad" style="background:#fff">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="section-title">Browse by Category</h2>
+            <p class="section-sub mb-0">Find opportunities in the field that excites you most</p>
+        </div>
+        <div class="row g-3">
+            <div class="col-6 col-md-4 col-lg-2" data-aos="fade-up" data-aos-delay="0">
+                <a href="#jobs" onclick="setCategory('Engineering')" class="cat-card d-block text-decoration-none">
+                    <div class="cat-icon" style="background:#E8F1FF"><i class="bi bi-code-slash" style="color:#1967D2"></i></div>
+                    <h6>Engineering</h6><p>Internships</p>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2" data-aos="fade-up" data-aos-delay="80">
+                <a href="#jobs" onclick="setCategory('Design')" class="cat-card d-block text-decoration-none">
+                    <div class="cat-icon" style="background:#FFF4E5"><i class="bi bi-palette" style="color:#F58220"></i></div>
+                    <h6>Design</h6><p>Creative roles</p>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2" data-aos="fade-up" data-aos-delay="160">
+                <a href="#jobs" onclick="setCategory('Marketing')" class="cat-card d-block text-decoration-none">
+                    <div class="cat-icon" style="background:#E8F6EC"><i class="bi bi-megaphone" style="color:#0BA02C"></i></div>
+                    <h6>Marketing</h6><p>Growth &amp; ads</p>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2" data-aos="fade-up" data-aos-delay="240">
+                <a href="#jobs" onclick="setCategory('Finance')" class="cat-card d-block text-decoration-none">
+                    <div class="cat-icon" style="background:#F3E8FF"><i class="bi bi-bar-chart-line" style="color:#7B61FF"></i></div>
+                    <h6>Finance</h6><p>Analyst roles</p>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2" data-aos="fade-up" data-aos-delay="320">
+                <a href="#jobs" onclick="setCategory('Research')" class="cat-card d-block text-decoration-none">
+                    <div class="cat-icon" style="background:#FFEAEA"><i class="bi bi-flask" style="color:#E05151"></i></div>
+                    <h6>Research</h6><p>Lab &amp; data</p>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2" data-aos="fade-up" data-aos-delay="400">
+                <a href="#jobs" onclick="setCategory('')" class="cat-card d-block text-decoration-none">
+                    <div class="cat-icon" style="background:#F5F7FA"><i class="bi bi-grid" style="color:#696969"></i></div>
+                    <h6>All Jobs</h6><p>View all</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── Job Listings ────────────────────────────────────────────────────────── -->
+<section class="section-pad" id="jobs">
+    <div class="container">
+
+        <!-- Filter bar -->
+        <div class="job-card p-4 mb-4" style="border-radius:16px" data-aos="fade-down">
+            <div class="row g-3 align-items-end">
+                <div class="col-12 col-md-4">
+                    <label class="form-label small fw-600" style="color:var(--text-dark)">
+                        <i class="bi bi-tag me-1" style="color:var(--primary)"></i>Category
+                    </label>
+                    <select id="categoryFilter" class="form-select rounded-8" onchange="applyFilters()">
+                        <option value="">All Categories</option>
+                        <option value="Engineering">Engineering</option>
+                        <option value="Design">Design</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Finance">Finance</option>
+                        <option value="Research">Research</option>
+                        <option value="Operations">Operations</option>
+                        <option value="Sales">Sales</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label small fw-600" style="color:var(--text-dark)">
+                        <i class="bi bi-currency-dollar me-1" style="color:#0BA02C"></i>
+                        Hourly Wage: <span id="wageLabel">Any</span>
+                    </label>
+                    <div class="d-flex gap-2 align-items-center">
+                        <span class="small text-muted">$0</span>
+                        <input type="range" id="minWage" min="0" max="30" step="1" value="0"
+                               class="form-range flex-grow-1" oninput="syncWage()">
+                        <span class="small text-muted fw-600" id="minWageVal"
+                              style="min-width:32px;color:var(--primary)">$0</span>
+                        <span class="small text-muted">–</span>
+                        <input type="range" id="maxWage" min="0" max="30" step="1" value="30"
+                               class="form-range flex-grow-1" oninput="syncWage()">
+                        <span class="small text-muted fw-600" id="maxWageVal"
+                              style="min-width:42px;color:var(--primary)">$30+</span>
+                    </div>
+                </div>
+                <div class="col-12 col-md-2 d-flex gap-2">
+                    <button class="btn w-100 rounded-8 fw-600"
+                            style="background:var(--primary);color:#fff;border:none"
+                            onclick="applyFilters()">
+                        <i class="bi bi-funnel me-1"></i>Filter
+                    </button>
+                    <button class="btn btn-outline-secondary rounded-8" onclick="clearFilters()" title="Clear">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result header -->
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+            <div>
+                <h2 class="section-title mb-1" id="sectionTitle">All Job Openings</h2>
+                <p class="section-sub mb-0"><span id="resultCount" th:text="${#lists.size(recentJobs)}">0</span> result(s) found</p>
+            </div>
+            <!-- Active filter chips -->
+            <div id="activeFilters" class="d-flex gap-2 flex-wrap" style="display:none!important"></div>
+        </div>
+
+        <!-- Empty state (hidden by default, shown by JS) -->
+        <div id="emptyState" style="display:none;background:#fff;border-radius:16px;border:1px solid var(--border)"
+             class="text-center py-5">
+            <div style="width:72px;height:72px;background:#E8F1FF;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+                <i class="bi bi-briefcase" style="font-size:1.8rem;color:var(--primary)"></i>
+            </div>
+            <h5 style="color:#202124">No jobs match your filters</h5>
+            <p class="text-muted small mb-4">Try a different category or adjust the salary range.</p>
+            <button class="btn btn-outline-secondary rounded-12 px-4" onclick="clearFilters()">Clear Filters</button>
+        </div>
+
+        <!-- Job cards — data attributes used by JS filter -->
+        <div class="row g-3" id="jobGrid">
+            <div class="col-md-6 col-lg-4 job-card-col"
+                 th:each="job : ${recentJobs}"
+                 th:attr="data-category=${job.category},data-salary=${job.salary},data-title=${job.title}"
+                 data-aos="fade-up">
+                <div class="job-card h-100">
+                    <div class="d-flex gap-3 align-items-start mb-3">
+                        <div class="company-logo"
+                             th:text="${#strings.substring(job.employer.fullName,0,1).toUpperCase()}">E</div>
+                        <div class="flex-grow-1">
+                            <h5 class="mb-0">
+                                <a sec:authorize="hasRole('STUDENT')"
+                                   th:href="@{/student/jobs/{id}(id=${job.jobId})}"
+                                   th:text="${job.title}"
+                                   class="stretched-link"
+                                   style="color:var(--text-dark);text-decoration:none">Job Title</a>
+                                <a sec:authorize="isAnonymous()"
+                                   th:href="@{/login}"
+                                   th:text="${job.title}"
+                                   class="stretched-link"
+                                   style="color:var(--text-dark);text-decoration:none">Job Title</a>
+                                <span sec:authorize="isAuthenticated() and !hasRole('STUDENT')"
+                                      th:text="${job.title}"
+                                      style="color:var(--text-dark)">Job Title</span>
+                            </h5>
+                            <span class="job-company" th:text="${job.employer.fullName}">Company</span>
+                        </div>
+                        <span class="salary-badge" th:if="${job.salary}">
+                            $<span th:text="${#numbers.formatDecimal(job.salary,1,0)}">0</span>/hr
+                        </span>
+                    </div>
+                    <div class="job-meta">
+                        <span th:if="${job.location}">
+                            <i class="bi bi-geo-alt"></i>
+                            <span th:text="${job.location}">Location</span>
+                        </span>
+                        <span th:if="${job.deadline}">
+                            <i class="bi bi-calendar3"></i>Due <span th:text="${job.deadline}">date</span>
+                        </span>
+                    </div>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <span class="badge-type badge-fulltime" th:if="${job.category}"
+                              th:text="${job.category}">Category</span>
+                    </div>
+                    <div class="mt-3 pt-3 border-top d-flex justify-content-between align-items-center"
+                         style="position:relative;z-index:2">
+                        <small class="text-muted" th:if="${job.createdAt}">
+                            <i class="bi bi-clock me-1"></i>
+                            <span th:text="${#temporals.format(job.createdAt,'MMM d')}">date</span>
+                        </small>
+                        <a sec:authorize="hasRole('STUDENT')"
+                           th:href="@{/student/jobs/{id}(id=${job.jobId})}"
+                           class="btn-apply text-white text-decoration-none small"
+                           style="position:relative;z-index:2">View Details</a>
+                        <a sec:authorize="isAnonymous()"
+                           th:href="@{/login}"
+                           class="btn-outline-primary-custom text-decoration-none small"
+                           style="position:relative;z-index:2">Login to Apply</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── How It Works ────────────────────────────────────────────────────────── -->
+<section class="section-pad" style="background:#fff">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-sub mb-0">Get hired in 3 simple steps</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="0">
+                <div class="step-card">
+                    <div class="step-num">1</div>
+                    <h5>Create Your Profile</h5>
+                    <p>Register as a student and set up your account in less than a minute — no CV required to get started.</p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="150">
+                <div class="step-card">
+                    <div class="step-num">2</div>
+                    <h5>Browse &amp; Filter Jobs</h5>
+                    <p>Search by category or hourly wage range. Find the role that matches your skills and schedule.</p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="step-card">
+                    <div class="step-num">3</div>
+                    <h5>Apply &amp; Get Hired</h5>
+                    <p>Submit one-click applications and track your status from Applied → Interviewing → Hired.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── Student Tools Showcase ──────────────────────────────────────────────── -->
+<section class="section-pad" style="background:var(--bg)">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <!-- Lottie: Website Construction -->
+            <div class="col-lg-6 d-flex justify-content-center" data-aos="fade-right">
+              <lottie-player src="/Website%20Construction.json" background="transparent" speed="1"
+                             loop autoplay style="width:100%;max-width:440px;height:380px">
+              </lottie-player>
+            </div>
+
+            <!-- Copy side -->
+            <div class="col-lg-6" data-aos="fade-left" data-aos-delay="100">
+                <p class="mb-2 fw-600" style="color:var(--primary);font-size:.88rem;text-transform:uppercase;letter-spacing:.06em">
+                    <i class="bi bi-bar-chart-fill me-1"></i>Insights &amp; Tracking
+                </p>
+                <h2 class="section-title mb-3">Everything You Need to Land the Job</h2>
+                <p style="color:var(--text);line-height:1.8;font-size:.97rem">
+                    StudentHustle gives you the tools to discover, apply, and track opportunities — all in one place. Filter by category, salary, and location to find roles that match your schedule and goals.
+                </p>
+                <div class="d-flex flex-column gap-3 mt-4">
+                    <div class="d-flex align-items-start gap-3">
+                        <div style="width:40px;height:40px;background:#E8F1FF;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                            <i class="bi bi-funnel-fill" style="color:var(--primary)"></i>
+                        </div>
+                        <div>
+                            <p class="fw-700 mb-1" style="color:var(--text-dark);font-size:.95rem">Smart Filters</p>
+                            <p class="small mb-0" style="color:var(--text)">Search by category, hourly wage, and location to surface only the roles that fit.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-start gap-3">
+                        <div style="width:40px;height:40px;background:#E8F6EC;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                            <i class="bi bi-clipboard-check-fill" style="color:#0BA02C"></i>
+                        </div>
+                        <div>
+                            <p class="fw-700 mb-1" style="color:var(--text-dark);font-size:.95rem">Application Tracking</p>
+                            <p class="small mb-0" style="color:var(--text)">See every application you've submitted and watch your status move from Applied → Hired.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-start gap-3">
+                        <div style="width:40px;height:40px;background:#FFF4E5;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                            <i class="bi bi-buildings-fill" style="color:#F58220"></i>
+                        </div>
+                        <div>
+                            <p class="fw-700 mb-1" style="color:var(--text-dark);font-size:.95rem">Verified Employers</p>
+                            <p class="small mb-0" style="color:var(--text)">Every listing is reviewed by our admin team before going live — no spam, no scams.</p>
+                        </div>
+                    </div>
+                </div>
+                <a th:href="@{/student/jobs}" class="btn-apply text-white text-decoration-none d-inline-flex align-items-center gap-2 mt-5 px-4 py-3 fw-700">
+                    <i class="bi bi-search"></i> Browse All Jobs
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── CTA Banner ─────────────────────────────────────────────────────────── -->
+<section sec:authorize="isAnonymous()" style="background:linear-gradient(135deg,#1967D2,#1558B0);padding:64px 0">
+    <div class="container text-center">
+        <h2 style="color:#fff;font-weight:800;margin-bottom:12px" data-aos="fade-up">Ready to Launch Your Career?</h2>
+        <p style="color:rgba(255,255,255,.8);margin-bottom:28px" data-aos="fade-up" data-aos-delay="100">Join thousands of students and alumni who found their next opportunity through StudentHustle.</p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap" data-aos="fade-up" data-aos-delay="200">
+            <a th:href="@{/register}" class="btn btn-light btn-lg px-4 rounded-12 fw-700" style="color:#1967D2">
+                Register as Student / Alumni
+            </a>
+            <a th:href="@{/register}" class="btn btn-outline-light btn-lg px-4 rounded-12">
+                Post a Job
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ── Footer ─────────────────────────────────────────────────────────────── -->
+<footer class="site-footer">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="0">
+                <div class="navbar-brand text-white mb-3 d-block" style="font-size:1.3rem;font-weight:800">
+                    <i class="bi bi-rocket-takeoff-fill me-1" style="color:#60A5FA"></i>StudentHustle
+                </div>
+                <p style="font-size:.88rem;line-height:1.7">The #1 job board for students and alumni. Find internships, part-time roles, and full-time opportunities to launch your career.</p>
+                <div class="social-links mt-3">
+                    <a href="#"><i class="bi bi-twitter-x"></i></a>
+                    <a href="#"><i class="bi bi-linkedin"></i></a>
+                    <a href="#"><i class="bi bi-instagram"></i></a>
+                    <a href="#"><i class="bi bi-facebook"></i></a>
+                </div>
+            </div>
+            <div class="col-6 col-lg-2" data-aos="fade-up" data-aos-delay="100">
+                <h5>For Students</h5>
+                <a th:href="@{/}">Browse Jobs</a>
+                <a th:href="@{/register}">Create Account</a>
+                <a th:href="@{/student/my-applications}">My Applications</a>
+            </div>
+            <div class="col-6 col-lg-2" data-aos="fade-up" data-aos-delay="200">
+                <h5>For Employers</h5>
+                <a th:href="@{/employer/post-job}">Post a Job</a>
+                <a th:href="@{/employer/dashboard}">Dashboard</a>
+                <a th:href="@{/register}">Register</a>
+            </div>
+            <div class="col-6 col-lg-2" data-aos="fade-up" data-aos-delay="300">
+                <h5>Resources</h5>
+                <a th:href="@{/swagger-ui/index.html}">API Docs</a>
+                <a th:href="@{/login}">Sign In</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p style="color:rgba(255,255,255,.5)">&copy; 2025 StudentHustle. All rights reserved.</p>
+            <div class="social-links"></div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Count-up animation for stat numbers
+    document.addEventListener('DOMContentLoaded', function () {
+        const countEls = document.querySelectorAll('[data-count]');
+        if (!countEls.length) return;
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                const el = entry.target;
+                const target = parseInt(el.dataset.count);
+                const suffix = el.textContent.replace(/[\d]/g, '').trim();
+                let start = 0;
+                const step = Math.ceil(target / (1200 / 16));
+                const timer = setInterval(() => {
+                    start = Math.min(start + step, target);
+                    el.textContent = start + suffix;
+                    if (start >= target) clearInterval(timer);
+                }, 16);
+                observer.unobserve(el);
+            });
+        }, { threshold: 0.5 });
+        countEls.forEach(el => observer.observe(el));
+    });
+</script>
+<script>
+    const MAX_WAGE = 30;
+
+    function syncWage() {
+        const min = parseInt(document.getElementById('minWage').value);
+        const max = parseInt(document.getElementById('maxWage').value);
+        // Prevent sliders crossing
+        if (min > max) {
+            document.getElementById('minWage').value = max;
+        }
+        document.getElementById('minWageVal').textContent = '$' + document.getElementById('minWage').value;
+        document.getElementById('maxWageVal').textContent = parseInt(document.getElementById('maxWage').value) >= MAX_WAGE ? '$' + MAX_WAGE + '+' : '$' + document.getElementById('maxWage').value;
+        const minVal = parseInt(document.getElementById('minWage').value);
+        const maxVal = parseInt(document.getElementById('maxWage').value);
+        document.getElementById('wageLabel').textContent =
+            (minVal === 0 && maxVal >= MAX_WAGE) ? 'Any' : ('$' + minVal + ' – ' + (maxVal >= MAX_WAGE ? MAX_WAGE + '+' : '$' + maxVal) + '/hr');
+        applyFilters();
+    }
+
+    function applyFilters() {
+        const keyword   = (document.getElementById('heroSearch').value || '').toLowerCase().trim();
+        const category  = document.getElementById('categoryFilter').value;
+        const minWage   = parseInt(document.getElementById('minWage').value);
+        const maxWage   = parseInt(document.getElementById('maxWage').value);
+        const isMaxOpen = maxWage >= MAX_WAGE;
+
+        const cols = document.querySelectorAll('.job-card-col');
+        let visible = 0;
+
+        cols.forEach(col => {
+            const colCat    = (col.dataset.category || '').trim();
+            const colSalary = parseFloat(col.dataset.salary) || 0;
+            const colTitle  = (col.dataset.title || '').toLowerCase();
+
+            const catMatch     = !category || colCat === category;
+            const salaryMatch  = colSalary >= minWage && (isMaxOpen || colSalary <= maxWage);
+            const keywordMatch = !keyword  || colTitle.includes(keyword);
+
+            if (catMatch && salaryMatch && keywordMatch) {
+                col.style.display = '';
+                visible++;
+            } else {
+                col.style.display = 'none';
+            }
+        });
+
+        document.getElementById('resultCount').textContent = visible;
+        document.getElementById('emptyState').style.display = visible === 0 ? 'block' : 'none';
+        document.getElementById('sectionTitle').textContent = category ? category + ' Jobs' : 'All Job Openings';
+    }
+
+    function clearFilters() {
+        document.getElementById('categoryFilter').value = '';
+        document.getElementById('heroSearch').value = '';
+        document.getElementById('minWage').value = 0;
+        document.getElementById('maxWage').value = MAX_WAGE;
+        syncWage();
+    }
+
+    function setCategory(cat) {
+        document.getElementById('categoryFilter').value = cat;
+        applyFilters();
+    }
+
+    function scrollToJobs() {
+        applyFilters();
+        document.getElementById('jobs').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // Init wage display
+    syncWage();
+</script>
+</body>
+</html>

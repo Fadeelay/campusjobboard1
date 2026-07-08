@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Create Account')}"></head>
+<body>
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<div class="auth-wrapper" style="padding:40px 0">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="auth-card mx-auto">
+                    <div class="text-center mb-4">
+                        <div style="width:56px;height:56px;background:#E8F1FF;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+                            <i class="bi bi-person-plus" style="font-size:1.6rem;color:#1967D2"></i>
+                        </div>
+                        <h2>Create your account</h2>
+                        <p class="subtitle mb-0">Join thousands of students, alumni and employers on StudentHustle</p>
+                    </div>
+
+                    <div th:if="${error}" class="alert alert-danger mb-3">
+                        <i class="bi bi-exclamation-circle me-2"></i><span th:text="${error}"></span>
+                    </div>
+
+                    <!-- Role selector -->
+                    <div class="mb-4">
+                        <label class="form-label">I am a…</label>
+                        <div class="row g-2" id="roleSelector">
+                            <div class="col-6">
+                                <div class="role-btn active" id="btn-student" onclick="selectRole('STUDENT')">
+                                    <i class="bi bi-mortarboard"></i>
+                                    <span>Student</span>
+                                    <div class="small text-muted mt-1" style="font-weight:400">Looking for jobs</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="role-btn" id="btn-employer" onclick="selectRole('EMPLOYER')">
+                                    <i class="bi bi-building"></i>
+                                    <span>Employer</span>
+                                    <div class="small text-muted mt-1" style="font-weight:400">Hiring talent</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form method="post" th:action="@{/register}" th:object="${user}">
+                        <input type="hidden" name="role" id="selectedRole" value="STUDENT">
+
+                        <div class="mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control" th:field="*{fullName}"
+                                   placeholder="Jane Smith" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-control" th:field="*{email}"
+                                   placeholder="you@university.edu" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" th:field="*{password}"
+                                   placeholder="Minimum 8 characters" required minlength="8">
+                            <div class="form-text">Use at least 8 characters with a mix of letters and numbers.</div>
+                        </div>
+
+                        <button type="submit" class="btn-primary-custom">Create Account</button>
+
+                        <p class="text-center text-muted small mt-3 mb-0">
+                            By registering you agree to our
+                            <a href="#" style="color:var(--primary)">Terms of Service</a>
+                        </p>
+                    </form>
+
+                    <div class="text-center mt-4 pt-3 border-top">
+                        <span class="text-muted small">Already have an account? </span>
+                        <a th:href="@{/login}" style="color:var(--primary);font-weight:600;font-size:.88rem">Sign in</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function selectRole(role) {
+    document.getElementById('selectedRole').value = role;
+    document.getElementById('btn-student').classList.toggle('active',  role === 'STUDENT');
+    document.getElementById('btn-employer').classList.toggle('active', role === 'EMPLOYER');
+}
+</script>
+</body>
+</html>

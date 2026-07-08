@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Edit Job')}"></head>
+<body>
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<div class="page-header">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-2" style="background:transparent;padding:0">
+                <li class="breadcrumb-item"><a th:href="@{/employer/dashboard}" style="color:rgba(255,255,255,.6)">Dashboard</a></li>
+                <li class="breadcrumb-item active" style="color:rgba(255,255,255,.9)">Edit Job</li>
+            </ol>
+        </nav>
+        <h1><i class="bi bi-pencil-square me-2"></i>Edit Job Posting</h1>
+        <p>Update the details for <span th:text="${job.title}" style="font-weight:700">this job</span></p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8" data-aos="fade-up">
+            <div class="job-card p-4 p-md-5">
+                <form method="post" th:action="@{/employer/edit-job/{id}(id=${job.jobId})}" th:object="${job}">
+                    <div class="row g-4">
+
+                        <div class="col-12">
+                            <label class="form-label fw-600" style="color:var(--text-dark)">Job Title *</label>
+                            <input type="text" class="form-control" th:field="*{title}" required maxlength="100">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-600" style="color:var(--text-dark)">Category</label>
+                            <select class="form-select" th:field="*{category}">
+                                <option value="">Select a category</option>
+                                <option th:each="cat : ${ {'Engineering','Design','Marketing','Finance','Research','Operations','Sales','Other'} }"
+                                        th:value="${cat}" th:text="${cat}"
+                                        th:selected="${cat == job.category}">Cat</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-600" style="color:var(--text-dark)">Location</label>
+                            <input type="text" class="form-control" th:field="*{location}"
+                                   placeholder="e.g. New York, NY or Remote">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-600" style="color:var(--text-dark)">Hourly Salary ($)</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" class="form-control" th:field="*{salary}" min="0" step="0.01">
+                                <span class="input-group-text">/hr</span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-600" style="color:var(--text-dark)">Application Deadline</label>
+                            <input type="date" class="form-control" th:field="*{deadline}">
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-600" style="color:var(--text-dark)">Job Description *</label>
+                            <textarea class="form-control" th:field="*{description}" rows="10" required></textarea>
+                        </div>
+
+                        <div class="col-12 d-flex gap-3 flex-wrap">
+                            <button type="submit" class="btn-apply border-0 px-4 py-2 fw-700">
+                                <i class="bi bi-save me-1"></i>Save Changes
+                            </button>
+                            <a th:href="@{/employer/dashboard}"
+                               class="btn btn-outline-secondary rounded-12 px-4">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

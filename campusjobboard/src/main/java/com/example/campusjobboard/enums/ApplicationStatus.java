@@ -1,7 +1,8 @@
 package com.example.campusjobboard.enums;
 
 public enum ApplicationStatus {
-    SUBMITTED,
-    ACCEPTED,
-    REJECTED
+    APPLIED,
+    INTERVIEWING,
+    REJECTED,
+    HIRED
 }

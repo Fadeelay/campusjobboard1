@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('My Applications')}"></head>
+<body>
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<div class="page-header">
+    <div class="container">
+        <h1><i class="bi bi-clipboard-check me-2"></i>My Applications</h1>
+        <p>Track the status of every role you've applied to</p>
+    </div>
+</div>
+
+<div class="container py-5">
+
+    <div th:if="${success}" class="alert alert-success mb-4 d-flex align-items-center gap-2">
+        <i class="bi bi-check-circle-fill fs-5"></i>
+        <span th:text="${success}"></span>
+    </div>
+    <div th:if="${error}" class="alert alert-danger mb-4 d-flex align-items-center gap-2">
+        <i class="bi bi-exclamation-circle-fill fs-5"></i>
+        <span th:text="${error}"></span>
+    </div>
+
+    <!-- Empty state -->
+    <div th:if="${#lists.isEmpty(applications)}"
+         class="text-center py-5"
+         style="background:#fff;border-radius:16px;border:1px solid var(--border)">
+        <div style="width:72px;height:72px;background:#E8F1FF;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+            <i class="bi bi-inbox" style="font-size:1.8rem;color:var(--primary)"></i>
+        </div>
+        <h5 style="color:var(--text-dark)">No applications yet</h5>
+        <p class="text-muted small mb-4">Start applying to jobs and track your progress right here.</p>
+        <a th:href="@{/student/jobs}" class="btn-apply text-white text-decoration-none px-4 py-2">
+            <i class="bi bi-search me-1"></i>Browse Jobs
+        </a>
+    </div>
+
+    <!-- Summary cards -->
+    <div th:unless="${#lists.isEmpty(applications)}" class="row g-3 mb-4">
+        <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="0">
+            <div class="stat-card text-center">
+                <div class="number" th:text="${#lists.size(applications)}">0</div>
+                <div class="label">Total Applied</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="100">
+            <div class="stat-card text-center" style="border-top-color:#0EA5E9">
+                <div class="number" style="color:#0EA5E9"
+                     th:text="${applications.?[status?.name() == 'INTERVIEWING'].size()}">0</div>
+                <div class="label">Interviewing</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="200">
+            <div class="stat-card text-center" style="border-top-color:#0BA02C">
+                <div class="number" style="color:#0BA02C"
+                     th:text="${applications.?[status?.name() == 'HIRED'].size()}">0</div>
+                <div class="label">Hired</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="300">
+            <div class="stat-card text-center" style="border-top-color:#E05151">
+                <div class="number" style="color:#E05151"
+                     th:text="${applications.?[status?.name() == 'REJECTED'].size()}">0</div>
+                <div class="label">Rejected</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Applications table -->
+    <div th:unless="${#lists.isEmpty(applications)}" class="data-table" data-aos="fade-up" data-aos-delay="100">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Job</th>
+                        <th>Employer</th>
+                        <th>Location</th>
+                        <th>Student ID</th>
+                        <th>Applied On</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="app : ${applications}">
+                        <td>
+                            <div class="fw-600" style="color:var(--text-dark)" th:text="${app.job.title}">Title</div>
+                            <div class="small text-muted" th:if="${app.job.category}" th:text="${app.job.category}">Cat</div>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="company-logo" style="width:32px;height:32px;font-size:.8rem"
+                                     th:text="${#strings.substring(app.job.employer.fullName,0,1).toUpperCase()}">E</div>
+                                <span class="small" th:text="${app.job.employer.fullName}">Company</span>
+                            </div>
+                        </td>
+                        <td><span class="small text-muted" th:text="${app.job.location ?: '—'}"></span></td>
+                        <td><span class="small" style="font-family:monospace;color:var(--text-dark)" th:text="${app.studentIdNumber ?: '—'}"></span></td>
+                        <td>
+                            <span class="small text-muted"
+                                  th:text="${app.appliedAt != null ? #temporals.format(app.appliedAt,'MMM d, yyyy') : '—'}"></span>
+                        </td>
+                        <td>
+                            <span th:switch="${app.status?.name()}">
+                                <span th:case="'APPLIED'"      class="badge-type badge-fulltime"><i class="bi bi-send me-1"></i>Applied</span>
+                                <span th:case="'INTERVIEWING'" class="badge-type badge-interview"><i class="bi bi-calendar-event me-1"></i>Interviewing</span>
+                                <span th:case="'HIRED'"        class="badge-type badge-hired"><i class="bi bi-check-circle me-1"></i>Hired</span>
+                                <span th:case="'REJECTED'"     class="badge-type badge-rejected"><i class="bi bi-x-circle me-1"></i>Rejected</span>
+                                <span th:case="*"              class="badge-type badge-fulltime" th:text="${app.status}">Status</span>
+                            </span>
+                        </td>
+                        <td>
+                            <a th:href="@{/student/jobs/{id}(id=${app.job.jobId})}"
+                               class="btn btn-sm btn-outline-secondary rounded-8">
+                                <i class="bi bi-eye me-1"></i>View
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Status legend -->
+    <div class="d-flex flex-wrap gap-2 mt-4">
+        <span class="text-muted small me-2">Status key:</span>
+        <span class="badge-type badge-fulltime">Applied — under review</span>
+        <span class="badge-type badge-interview">Interviewing — next step</span>
+        <span class="badge-type badge-hired">Hired — offer extended</span>
+        <span class="badge-type badge-rejected">Rejected — not selected</span>
+    </div>
+</div>
+
+<style>
+    @keyframes overlayFadeIn  { from{opacity:0}                              to{opacity:1} }
+    @keyframes overlayFadeOut { from{opacity:1}                              to{opacity:0} }
+    @keyframes modalPop       { from{opacity:0;transform:scale(.8) translateY(30px)} to{opacity:1;transform:none} }
+    @keyframes personBounce   { from{transform:translateY(0)} to{transform:translateY(-14px)} }
+    @keyframes badgePop       { from{opacity:0;transform:scale(0) rotate(-45deg)} to{opacity:1;transform:scale(1) rotate(0)} }
+    @keyframes confettiFall   {
+        0%   { transform:translateY(0) rotate(0deg);   opacity:1; }
+        100% { transform:translateY(500px) rotate(720deg); opacity:0; }
+    }
+    @keyframes starPulse { 0%,100%{opacity:.6;transform:scale(1)} 50%{opacity:1;transform:scale(1.3)} }
+</style>
+
+<!-- ── Application submitted: celebration overlay ──────────── -->
+<div th:if="${success}" id="successOverlay"
+     style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;
+            background:rgba(18,24,40,.65);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+            animation:overlayFadeIn .4s ease both">
+
+  <div id="successModal"
+       style="background:#fff;border-radius:28px;padding:40px 36px 32px;max-width:420px;width:92%;
+              text-align:center;box-shadow:0 40px 100px rgba(0,0,0,.28);position:relative;overflow:hidden;
+              animation:modalPop .55s .1s cubic-bezier(.34,1.56,.64,1) both">
+
+    <!-- Confetti container -->
+    <div id="confettiWrap" style="position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0"></div>
+
+    <!-- Lottie: Job Success -->
+    <div style="width:230px;height:230px;margin:0 auto 4px;position:relative;z-index:1">
+      <lottie-player src="/Job%20Success.json" background="transparent" speed="1"
+                     loop autoplay style="width:230px;height:230px"></lottie-player>
+    </div>
+
+    <!-- Green checkmark badge (overlaps illustration bottom) -->
+    <div style="width:58px;height:58px;background:#E8F6EC;border-radius:50%;border:4px solid #fff;
+                display:flex;align-items:center;justify-content:center;
+                margin:-30px auto 22px;position:relative;z-index:2;
+                box-shadow:0 6px 20px rgba(11,160,44,.25);
+                animation:badgePop .55s .55s cubic-bezier(.34,1.56,.64,1) both">
+      <i class="bi bi-check-lg" style="font-size:1.7rem;color:#0BA02C;line-height:1"></i>
+    </div>
+
+    <div style="position:relative;z-index:1">
+      <h3 style="font-family:'Manrope',sans-serif;font-weight:800;color:#202124;
+                 margin-bottom:8px;font-size:1.45rem">
+        Application Submitted! 🎉
+      </h3>
+      <p style="color:#696969;font-size:.93rem;margin-bottom:28px;line-height:1.65">
+        Great work! Your application is on its way.<br>Track its status right here on this page.
+      </p>
+      <button onclick="closeSuccess()"
+              style="background:#1967D2;color:#fff;border:none;border-radius:10px;
+                     padding:14px 32px;font-weight:700;font-size:.95rem;cursor:pointer;
+                     width:100%;margin-bottom:12px;transition:background .2s,transform .15s"
+              onmouseover="this.style.background='#1558B0'"
+              onmouseout="this.style.background='#1967D2'"
+              onmousedown="this.style.transform='scale(.97)'"
+              onmouseup="this.style.transform=''">
+        <i class="bi bi-clipboard-check me-2"></i>Track My Application
+      </button>
+      <p style="color:#aaa;font-size:.8rem;margin:0">
+        Closes in <span id="successCountdown" style="font-weight:700;color:#1967D2">5</span>s
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function () {
+    const overlay = document.getElementById('successOverlay');
+    if (!overlay) return;
+
+    // ── Confetti ──────────────────────────────
+    const wrap = document.getElementById('confettiWrap');
+    const colors = ['#1967D2','#60A5FA','#FCD34D','#4ADE80','#F87171','#A78BFA','#FB923C','#34D399'];
+    for (let i = 0; i < 48; i++) {
+        const el = document.createElement('div');
+        const color = colors[i % colors.length];
+        const size  = 5 + Math.random() * 9;
+        const left  = Math.random() * 100;
+        const delay = Math.random() * 1.6;
+        const dur   = 2.2 + Math.random() * 2;
+        const round = Math.random() > .5;
+        el.style.cssText =
+            `position:absolute;left:${left}%;top:-12px;` +
+            `width:${round ? size/2 : size}px;height:${size}px;` +
+            `background:${color};border-radius:${round ? '50%' : '2px'};` +
+            `animation:confettiFall ${dur}s ${delay}s ease-in forwards;` +
+            `transform:rotate(${Math.random()*360}deg);opacity:.9`;
+        wrap.appendChild(el);
+    }
+
+    // ── Auto-close countdown ──────────────────
+    let secs = 5;
+    const countEl = document.getElementById('successCountdown');
+    const timer = setInterval(() => {
+        secs--;
+        if (countEl) countEl.textContent = secs;
+        if (secs <= 0) closeSuccess();
+    }, 1000);
+
+    // ── Manual close ─────────────────────────
+    window.closeSuccess = function () {
+        clearInterval(timer);
+        overlay.style.animation = 'overlayFadeOut .3s ease forwards';
+        setTimeout(() => overlay.remove(), 300);
+    };
+
+    // Close on backdrop click
+    overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) closeSuccess();
+    });
+}());
+</script>
+</body>
+</html>

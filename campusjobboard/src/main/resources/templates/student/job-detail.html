@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Job Detail')}"></head>
+<body>
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<div class="page-header">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-2" style="background:transparent;padding:0">
+                <li class="breadcrumb-item"><a th:href="@{/student/jobs}" style="color:rgba(255,255,255,.6)">Jobs</a></li>
+                <li class="breadcrumb-item active" style="color:rgba(255,255,255,.9)" th:text="${job.title}">Job</li>
+            </ol>
+        </nav>
+        <h1 th:text="${job.title}">Job Title</h1>
+        <p th:text="${job.employer.fullName}">Employer</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div th:if="${success}" class="alert alert-success mb-4"><i class="bi bi-check-circle me-2"></i><span th:text="${success}"></span></div>
+    <div th:if="${error}"   class="alert alert-danger  mb-4"><i class="bi bi-exclamation-circle me-2"></i><span th:text="${error}"></span></div>
+
+    <div class="row g-4">
+        <!-- ── Main content ── -->
+        <div class="col-lg-8" data-aos="fade-right">
+            <div class="job-card p-4 mb-4">
+                <h4 class="fw-700 mb-3" style="color:var(--text-dark)">Job Description</h4>
+                <p th:text="${job.description}" style="white-space:pre-wrap;line-height:1.8;color:var(--text)"></p>
+            </div>
+        </div>
+
+        <!-- ── Sidebar ── -->
+        <div class="col-lg-4" data-aos="fade-left" data-aos-delay="100">
+            <!-- Job overview card -->
+            <div class="job-card p-4 mb-3">
+                <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
+                    <div class="company-logo" style="width:60px;height:60px;font-size:1.4rem"
+                         th:text="${#strings.substring(job.employer.fullName,0,1).toUpperCase()}">E</div>
+                    <div>
+                        <div class="fw-700" style="color:var(--text-dark)" th:text="${job.employer.fullName}">Company</div>
+                        <div class="small text-muted">Verified Employer</div>
+                    </div>
+                </div>
+
+                <ul class="list-unstyled mb-0" style="display:flex;flex-direction:column;gap:14px">
+                    <li th:if="${job.location}" class="d-flex align-items-center gap-3">
+                        <div style="width:36px;height:36px;background:#E8F1FF;border-radius:8px;display:flex;align-items:center;justify-content:center">
+                            <i class="bi bi-geo-alt-fill" style="color:var(--primary)"></i>
+                        </div>
+                        <div>
+                            <div class="small text-muted">Location</div>
+                            <div class="fw-600 small" style="color:var(--text-dark)" th:text="${job.location}"></div>
+                        </div>
+                    </li>
+                    <li th:if="${job.salary}" class="d-flex align-items-center gap-3">
+                        <div style="width:36px;height:36px;background:#E8F6EC;border-radius:8px;display:flex;align-items:center;justify-content:center">
+                            <i class="bi bi-currency-dollar" style="color:#0BA02C"></i>
+                        </div>
+                        <div>
+                            <div class="small text-muted">Salary</div>
+                            <div class="fw-600 small" style="color:var(--text-dark)">
+                                $<span th:text="${#numbers.formatDecimal(job.salary,1,0)}"></span>/hr
+                            </div>
+                        </div>
+                    </li>
+                    <li th:if="${job.category}" class="d-flex align-items-center gap-3">
+                        <div style="width:36px;height:36px;background:#FFF4E5;border-radius:8px;display:flex;align-items:center;justify-content:center">
+                            <i class="bi bi-tag-fill" style="color:#F58220"></i>
+                        </div>
+                        <div>
+                            <div class="small text-muted">Category</div>
+                            <div class="fw-600 small" style="color:var(--text-dark)" th:text="${job.category}"></div>
+                        </div>
+                    </li>
+                    <li th:if="${job.deadline}" class="d-flex align-items-center gap-3">
+                        <div style="width:36px;height:36px;background:#FFEAEA;border-radius:8px;display:flex;align-items:center;justify-content:center">
+                            <i class="bi bi-calendar3" style="color:#E05151"></i>
+                        </div>
+                        <div>
+                            <div class="small text-muted">Deadline</div>
+                            <div class="fw-600 small" style="color:var(--text-dark)" th:text="${job.deadline}"></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Apply / Already applied -->
+            <div th:if="${alreadyApplied}" class="job-card p-4 text-center" style="border-color:#0BA02C">
+                <div style="width:52px;height:52px;background:#E8F6EC;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
+                    <i class="bi bi-check-lg" style="font-size:1.4rem;color:#0BA02C"></i>
+                </div>
+                <h6 class="fw-700 mb-1" style="color:var(--text-dark)">Application Submitted</h6>
+                <p class="text-muted small mb-3">You've already applied to this role. Track your status below.</p>
+                <a th:href="@{/student/my-applications}"
+                   class="btn-apply text-white text-decoration-none d-block text-center py-2">
+                    View My Applications
+                </a>
+            </div>
+
+            <div th:unless="${alreadyApplied}" class="job-card p-4 text-center">
+                <div style="width:52px;height:52px;background:#E8F1FF;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
+                    <i class="bi bi-send-fill" style="font-size:1.3rem;color:var(--primary)"></i>
+                </div>
+                <h6 class="fw-700 mb-1" style="color:var(--text-dark)">Ready to apply?</h6>
+                <p class="text-muted small mb-3">Complete a short form — takes less than 2 minutes.</p>
+                <a th:href="@{/student/apply/{id}(id=${job.jobId})}"
+                   class="btn-apply text-white text-decoration-none d-block text-center py-2 fw-700">
+                    <i class="bi bi-send-fill me-1"></i>Apply for This Role
+                </a>
+            </div>
+
+            <a th:href="@{/student/jobs}" class="d-block text-center mt-3 small" style="color:var(--text)">
+                <i class="bi bi-arrow-left me-1"></i>Back to all jobs
+            </a>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

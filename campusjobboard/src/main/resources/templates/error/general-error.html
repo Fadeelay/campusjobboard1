@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Error')}"></head>
+<body>
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<div style="min-height:70vh;display:flex;align-items:center;justify-content:center;padding:40px 16px">
+    <div class="text-center" style="max-width:480px">
+        <div style="width:88px;height:88px;background:#FFEAEA;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px">
+            <i class="bi bi-exclamation-triangle-fill" style="font-size:2.2rem;color:#E05151"></i>
+        </div>
+        <h2 class="fw-800 mb-2" style="color:var(--text-dark);font-family:'Manrope',sans-serif">Something went wrong</h2>
+        <p class="text-muted mb-5" th:text="${errorMessage ?: 'An unexpected error occurred. Please try again.'}">Error message</p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a th:href="@{/}" class="btn-apply text-white text-decoration-none px-4 py-2">
+                <i class="bi bi-house me-1"></i>Go Home
+            </a>
+            <button onclick="history.back()" class="btn btn-outline-secondary rounded-12 px-4">
+                <i class="bi bi-arrow-left me-1"></i>Go Back
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

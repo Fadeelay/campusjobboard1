@@ -13,7 +13,7 @@ import com.example.campusjobboard.enums.*;
 
 
 @Entity
-@Table(name = "USER")
+@Table(name = "APP_USER")
 public class User {
 
     @Id
