@@ -55,12 +55,10 @@ public class JobApplication {
 
     // ── Application questions ──────────────────────────────────────────────────
 
-    @Lob
-    @Column(name = "cover_letter")
+    @Column(name = "cover_letter", columnDefinition = "TEXT")
     private String coverLetter;
 
-    @Lob
-    @Column(name = "relevant_experience")
+    @Column(name = "relevant_experience", columnDefinition = "TEXT")
     private String relevantExperience;
 
     // ── Lifecycle ─────────────────────────────────────────────────────────────
