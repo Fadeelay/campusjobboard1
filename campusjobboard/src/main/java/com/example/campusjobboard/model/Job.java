@@ -34,7 +34,7 @@ public class Job {
 
 
     @NotBlank
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     private String location;
