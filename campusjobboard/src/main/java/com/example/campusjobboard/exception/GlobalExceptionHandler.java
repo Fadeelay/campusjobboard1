@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -48,8 +49,8 @@ public class GlobalExceptionHandler {
         return "error/duplicate-application";
     }
 
-    @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
-    public Object handleAccessDenied(org.springframework.security.access.AccessDeniedException ex,
+    @ExceptionHandler(AccessDeniedException.class)
+    public Object handleAccessDenied(AccessDeniedException ex,
                                      Model model, HttpServletRequest request) {
         log.warn("AccessDeniedException on {}: {}", request.getRequestURI(), ex.getMessage());
         if (isApiRequest(request)) {

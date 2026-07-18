@@ -4,6 +4,10 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+### Runtime logs (regenerated on every run — never commit) ###
+logs/
+*.log
+
 ### Local config (never commit credentials) ###
 application-local.properties
 *.env

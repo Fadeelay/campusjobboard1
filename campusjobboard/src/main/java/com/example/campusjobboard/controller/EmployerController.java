@@ -1,5 +1,6 @@
 package com.example.campusjobboard.controller;
 
+import com.example.campusjobboard.enums.ApplicationStatus;
 import com.example.campusjobboard.model.Job;
 import com.example.campusjobboard.model.User;
 import com.example.campusjobboard.service.ApplicationService;
@@ -89,7 +90,7 @@ public class EmployerController {
         }
         model.addAttribute("job", job);
         model.addAttribute("applications", applicationService.findApplicationsByJob(job));
-        model.addAttribute("statuses", com.example.campusjobboard.enums.ApplicationStatus.values());
+        model.addAttribute("statuses", ApplicationStatus.values());
         return "employer/applications";
     }
 
@@ -103,13 +104,13 @@ public class EmployerController {
         }
         model.addAttribute("job", job);
         model.addAttribute("jobApplication", applicationService.findById(appId));
-        model.addAttribute("statuses", com.example.campusjobboard.enums.ApplicationStatus.values());
+        model.addAttribute("statuses", ApplicationStatus.values());
         return "employer/application-detail";
     }
 
     @PostMapping("/applications/{appId}/status")
     public String updateApplicationStatus(@PathVariable Long appId,
-                                          @RequestParam com.example.campusjobboard.enums.ApplicationStatus status,
+                                          @RequestParam ApplicationStatus status,
                                           @RequestParam Long jobId,
                                           @RequestParam(required = false, defaultValue = "false") boolean fromDetail,
                                           Principal principal,

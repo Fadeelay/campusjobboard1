@@ -1,6 +1,7 @@
 package com.example.campusjobboard.controller.api;
 
 import com.example.campusjobboard.enums.ApplicationStatus;
+import com.example.campusjobboard.enums.Role;
 import com.example.campusjobboard.model.Job;
 import com.example.campusjobboard.model.JobApplication;
 import com.example.campusjobboard.model.User;
@@ -51,7 +52,7 @@ public class ApplicationApiController {
                                 Principal principal) {
         User student = userService.findByEmail(principal.getName());
         Job job = jobService.findById(jobId);
-        com.example.campusjobboard.model.JobApplication formData = new com.example.campusjobboard.model.JobApplication();
+        JobApplication formData = new JobApplication();
         formData.setStudentIdNumber(studentIdNumber != null ? studentIdNumber.trim() : "");
         return applicationService.applyToJob(job, student, formData);
     }
@@ -77,7 +78,7 @@ public class ApplicationApiController {
 
     private void requireOwnerOrAdmin(Job job, Principal principal) {
         User caller = userService.findByEmail(principal.getName());
-        boolean isAdmin = caller.getRole() == com.example.campusjobboard.enums.Role.ADMIN;
+        boolean isAdmin = caller.getRole() == Role.ADMIN;
         if (!isAdmin && !job.getEmployer().getUserId().equals(caller.getUserId())) {
             throw new AccessDeniedException("You do not own this job");
         }
