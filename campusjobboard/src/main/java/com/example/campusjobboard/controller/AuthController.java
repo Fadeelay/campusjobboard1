@@ -38,6 +38,12 @@ public class AuthController {
     public String register(@ModelAttribute User user,
                            @RequestParam Role role,
                            Model model) {
+        if (role != Role.STUDENT && role != Role.EMPLOYER) {
+            log.warn("Rejected self-registration attempt with role {} for {}", role, user.getEmail());
+            model.addAttribute("error", "Invalid account type.");
+            model.addAttribute("user", user);
+            return "auth/register";
+        }
         try {
             userService.registerUser(user, role);
             log.info("New user registered: {} as {}", user.getEmail(), role);
